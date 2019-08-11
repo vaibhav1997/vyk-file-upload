@@ -1,0 +1,132 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<h3>Hi Uploader</h3>
+<form method="POST">
+  {% csrf_token %}
+  <input
+    type="text"
+    id="uploader-name"
+    name="username"
+    placeholder="Username"
+  />
+  <input
+    type="password"
+    id="uploader-pass"
+    name="password"
+    placeholder="Password"
+  />
+  <button type="submit" id="submit-button">LOGIN</button>
+</form>
+<div id="disp-button" style="visibility: hidden">
+  <form enctype="multipart/form-data" id="upload-form">
+    <input
+      type="text"
+      id="recipient-name"
+      name="reciever"
+      placeholder="Enter reciever mail"
+    />
+    <input type="file" id="file-name" name="file" />
+    <button id="upload-button" type="submit">
+      CONFIRM
+    </button>
+  </form>
+  <button id="logout-button" type="submit">
+    LOGOUT
+  </button>
+  <!-- Display data -->
+  <div class="display-log">
+    <h4>You Shared...</h4>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    if (localStorage.getItem("token") !== null) {
+      document.getElementById("disp-button").style.visibility = "visible";
+      $.ajax({
+        type: "POST",
+        url: "{% url 'FileLogFunc' %}",
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token")
+        },
+        success: function(data) {
+          console.log(data[0]);
+          for (var i = 0; i < data.length; i++) {
+            console.log(data[i]);
+            $(".display-log").append(
+              "<p><a href=http://127.0.0.1:8000" +
+                data[i].file +
+                ">" +
+                data[i].file +
+                "</a> with <span style=color:crimson>" +
+                data[i].file_recepient +
+                "</span></p>"
+            );
+          }
+        }
+      });
+    }
+
+    $("#submit-button").on("click", function(e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'UploaderLoginFunc' %}",
+        data: {
+          username: $("#uploader-name").val(),
+          password: $("#uploader-pass").val()
+        },
+        dataType: "JSON",
+        success: function(data) {
+          localStorage.setItem("token", data.token);
+          document.getElementById("disp-button").style.visibility = "visible";
+          console.log("Set Token");
+        },
+        complete: function() {
+          $("#uploader-name").val("");
+          $("#uploader-pass").val("");
+        }
+      });
+    });
+
+    $("#logout-button").on("click", function(e) {
+      e.preventDefault();
+      $.ajax({
+        success: function() {
+          localStorage.clear();
+          document.getElementById("disp-button").style.visibility = "hidden";
+        },
+        complete: function() {
+          window.location.reload("http://127.0.0.1:8000/uploader");
+        }
+      });
+    });
+
+    $("#upload-button").on("click", function(e) {
+      e.preventDefault();
+      file = document.getElementById("file-name");
+      recipient = document.getElementById("recipient-name");
+      const formData = new FormData();
+      formData.append("file", file.files[0]);
+      formData.append("recipient", recipient.value);
+      //   console.log(files);
+      $.ajax({
+        type: "POST",
+        url: "{% url 'FileUploadFunc' %}",
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token")
+          //   "Content-Type": "multipart/form-data"
+        },
+        // data: {
+        //   recipient: $("#recipient-name").val(),
+        //   file: file.files[0]
+        // },
+        data: formData,
+        contentType: false,
+        processData: false, //Since we're using formdata **
+        success: function() {
+          console.log("Completed");
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

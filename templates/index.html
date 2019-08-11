@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div>
+  <table>
+    <tr>
+      <td><a href="{% url 'AdminLogin' %}">Admin Login</a></td>
+      <td><a href="{% url 'FileuploaderLogin' %}">File Uploader</a></td>
+      <td><a href="{% url 'FilerecepientLogin' %}">File Recepient</a></td>
+    </tr>
+  </table>
+</div>
+{% endblock %}
