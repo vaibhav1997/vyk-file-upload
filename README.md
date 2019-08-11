@@ -13,14 +13,6 @@ The task consists of using python/django to satisfy the requirements.
 - Ajax/Jquery and use of serializers
 - Different login panel for Admin, Uploader and Recipient
 
-#### Credentials
-
-| User                | username/email      | password  |
-| ------------------- | ------------------- | --------- |
-| Admin (Admin Panel) | admin@mail.com      | vykt3ch   |
-| Uploader            | uploader1@mail.com  | vyk1234up |
-| Recipient           | recepient1@mail.com | vyk123re  |
-
 #### Change Settings
 
 - Make sure to enter your own email and password to send and recieve mail
