@@ -20,3 +20,7 @@ The task consists of using python/django to satisfy the requirements.
 | Admin (Admin Panel) | admin@mail.com      | vykt3ch   |
 | Uploader            | uploader1@mail.com  | vyk1234up |
 | Recipient           | recepient1@mail.com | vyk123re  |
+
+#### Change Settings
+
+- Make sure to enter your own email and password to send and recieve mail
