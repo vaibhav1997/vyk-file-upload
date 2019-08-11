@@ -14,8 +14,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User  # Default User model
 from .models import *
 from .serializers import *
+from django.core.mail import send_mail
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core import serializers
+from django.conf import settings
 # Create your views here.
 
 
@@ -100,6 +102,12 @@ def FileUpload(request):
     file_serializer = FileSerializer(data=data)
     if file_serializer.is_valid():
         file_serializer.save()
+        subject = 'Testing'
+        mailmessage = "You've recieved a file. Login to view the file!"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [recipient, ]
+        send_mail(subject, mailmessage, email_from, recipient_list)
+        # Use threads if taking too long!
         return Response(file_serializer.data, status=HTTP_200_OK)
     else:
         return Response(file_serializer.errors, status=HTTP_400_BAD_REQUEST)

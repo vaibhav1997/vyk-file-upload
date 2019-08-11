@@ -78,6 +78,28 @@
         success: function(data) {
           localStorage.setItem("token", data.token);
           document.getElementById("disp-button").style.visibility = "visible";
+          $.ajax({
+            type: "POST",
+            url: "{% url 'FileLogFunc' %}",
+            headers: {
+              Authorization: "Token " + localStorage.getItem("token")
+            },
+            success: function(data) {
+              console.log(data[0]);
+              for (var i = 0; i < data.length; i++) {
+                console.log(data[i]);
+                $(".display-log").append(
+                  "<p><a href=http://127.0.0.1:8000" +
+                    data[i].file +
+                    ">" +
+                    data[i].file +
+                    "</a> with <span style=color:crimson>" +
+                    data[i].file_recepient +
+                    "</span></p>"
+                );
+              }
+            }
+          });
           console.log("Set Token");
         },
         complete: function() {
